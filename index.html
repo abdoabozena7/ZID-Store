@@ -349,6 +349,21 @@
             border-color: rgba(37, 211, 102, 0.5);
         }
 
+        /* Explore Products */
+        .link-explore .icon-wrapper {
+            background: linear-gradient(45deg, #5227ff, #ff9ffc);
+        }
+
+        .link-explore:active,
+        .link-explore:hover,
+        .link-explore.is-tilt-hover {
+            box-shadow: 
+                0 10px 40px rgba(82, 39, 255, 0.35),
+                0 0 0 1px rgba(255, 159, 252, 0.35);
+            transform: translateY(-5px) scale(1.02);
+            border-color: rgba(82, 39, 255, 0.5);
+        }
+
         .icon-wrapper {
             width: 50px;
             height: 50px;
@@ -402,6 +417,197 @@
         .link-btn.is-tilt-hover .link-arrow {
             opacity: 1;
             transform: translateX(-5px);
+        }
+
+        /* Explore Modal */
+        .explore-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 3, 13, 0.8);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 12000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .explore-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .explore-modal .modal-content {
+            position: relative;
+            width: min(1000px, 92vw);
+            height: min(700px, 82vh);
+            border-radius: 28px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45), 0 0 60px rgba(82, 39, 255, 0.25);
+        }
+
+        .explore-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .explore-close:hover {
+            background: rgba(255, 255, 255, 0.14);
+            transform: translateY(-2px);
+        }
+
+        .explore-headline {
+            position: absolute;
+            top: 20px;
+            left: 24px;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: #fff;
+            z-index: 2;
+        }
+
+        #exploreReactRoot {
+            position: absolute;
+            inset: 0;
+        }
+
+        /* InfiniteMenu CSS */
+        #infinite-grid-menu-canvas {
+            cursor: grab;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+            outline: none;
+            background: transparent;
+        }
+
+        #infinite-grid-menu-canvas:active {
+            cursor: grabbing;
+        }
+
+        .infinite-menu .action-button {
+            position: absolute;
+            left: 50%;
+            z-index: 10;
+            width: 60px;
+            height: 60px;
+            display: grid;
+            place-items: center;
+            background: #5227ff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 5px solid #000;
+        }
+
+        .infinite-menu .face-title {
+            user-select: none;
+            position: absolute;
+            font-weight: 900;
+            font-size: 2.2rem;
+            left: 1.6em;
+            top: 50%;
+            color: #fff;
+        }
+
+        .infinite-menu .action-button-icon {
+            user-select: none;
+            position: relative;
+            color: #fff;
+            top: 2px;
+            font-size: 26px;
+        }
+
+        .infinite-menu .face-title {
+            position: absolute;
+            top: 50%;
+            transform: translate(20%, -50%);
+        }
+
+        .infinite-menu .face-title.active {
+            opacity: 1;
+            transform: translate(20%, -50%);
+            pointer-events: auto;
+            transition: 0.5s ease;
+        }
+
+        .infinite-menu .face-title.inactive {
+            pointer-events: none;
+            opacity: 0;
+            transition: 0.1s ease;
+        }
+
+        .infinite-menu .face-description {
+            user-select: none;
+            position: absolute;
+            max-width: 22ch;
+            top: 50%;
+            font-size: 1.05rem;
+            right: 1%;
+            transform: translate(0, -50%);
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .infinite-menu .face-description.active {
+            opacity: 1;
+            transform: translate(-90%, -50%);
+            pointer-events: auto;
+            transition: 0.5s ease;
+        }
+
+        .infinite-menu .face-description.inactive {
+            pointer-events: none;
+            transform: translate(-60%, -50%);
+            opacity: 0;
+            transition: 0.1s ease;
+        }
+
+        .infinite-menu .action-button {
+            position: absolute;
+            left: 50%;
+        }
+
+        .infinite-menu .action-button.active {
+            bottom: 3.8em;
+            transform: translateX(-50%) scale(1);
+            opacity: 1;
+            pointer-events: auto;
+            transition: 0.5s ease;
+        }
+
+        .infinite-menu .action-button.inactive {
+            bottom: -80px;
+            transform: translateX(-50%) scale(0);
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.1s ease;
+        }
+
+        @media (max-width: 1500px) {
+            .infinite-menu .face-title,
+            .infinite-menu .face-description {
+                display: none;
+            }
         }
 
         /* Ripple Effect */
@@ -664,6 +870,27 @@
                     </svg>
                 </a>
             </div>
+
+            <!-- Explore Products -->
+            <div class="link-card magnetic-area">
+                <a href="javascript:void(0);" 
+                   id="exploreLink"
+                   class="link-btn link-explore" 
+                   role="button">
+                    <div class="icon-wrapper">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 3l9 4.5-9 4.5-9-4.5L12 3zm9 7.5l-3 1.5v4.5l3-1.5v-4.5zm-6 3l-3 1.5v4.5l3-1.5v-4.5zm-5 1.5l-3-1.5v4.5l3 1.5v-4.5zm-5-3l-3-1.5v4.5l3 1.5v-4.5z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div class="link-text">
+                        <span class="link-title">Explore Products</span>
+                        <span class="link-subtitle">شوف منتجاتنا من هنا</span>
+                    </div>
+                    <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                </a>
+            </div>
         </div>
 
         <!-- Footer -->
@@ -672,10 +899,21 @@
         </div>
     </div>
 
+    <!-- Explore Modal -->
+    <div class="explore-modal" id="exploreModal" aria-hidden="true">
+        <div class="modal-content infinite-menu">
+            <button class="explore-close" id="exploreClose" aria-label="Close">×</button>
+            <div class="explore-headline">Explore Products</div>
+            <div id="exploreReactRoot"></div>
+        </div>
+    </div>
+
     <!-- Gyro Indicator -->
     <div class="gyro-indicator" id="gyroIndicator">
         📱 حرك الموبايل لتجربة التأثير ثلاثي الأبعاد
     </div>
+
+    <script type="module" src="Assets/js/explore-menu.js"></script>
 
     <script>
         // ============ LOADER ============
@@ -721,14 +959,52 @@
         const orbs = document.querySelectorAll('.orb');
         const gyroIndicator = document.getElementById('gyroIndicator');
         const linkButtons = document.querySelectorAll('.link-btn');
+        const exploreLink = document.getElementById('exploreLink');
+        const exploreModal = document.getElementById('exploreModal');
+        const exploreClose = document.getElementById('exploreClose');
         let gyroHoverActive = false;
         let tiltYBaseline = null;
+        let lastScrollY = 0;
 
         function setGyroHover(state) {
             if (state === gyroHoverActive) return;
             gyroHoverActive = state;
             linkButtons.forEach(btn => btn.classList.toggle('is-tilt-hover', state));
         }
+
+        function openExplore() {
+            if (!exploreModal) return;
+            lastScrollY = window.scrollY;
+            exploreModal.classList.add('active');
+            exploreModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            if (window.__zidExploreResize) {
+                setTimeout(() => window.__zidExploreResize(), 80);
+            }
+        }
+
+        function closeExplore() {
+            if (!exploreModal) return;
+            exploreModal.classList.remove('active');
+            exploreModal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+            window.scrollTo({ top: lastScrollY, behavior: 'auto' });
+        }
+
+        if (exploreLink) {
+            exploreLink.addEventListener('click', openExplore);
+        }
+        if (exploreClose) {
+            exploreClose.addEventListener('click', closeExplore);
+        }
+        if (exploreModal) {
+            exploreModal.addEventListener('click', (e) => {
+                if (e.target === exploreModal) closeExplore();
+            });
+        }
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeExplore();
+        });
 
         function handleOrientation(event) {
             if (!gyroEnabled) {
