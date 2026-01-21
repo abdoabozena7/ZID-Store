@@ -30,6 +30,7 @@
             --pillar-bottom: #ff9ffc;
             --pillar-glow: rgba(82, 39, 255, 0.6);
             --pillar-shadow: rgba(255, 159, 252, 0.45);
+            --bg-dim: 0.35;
         }
 
         html, body {
@@ -721,6 +722,99 @@
             z-index: 1000;
         }
 
+        /* Cubic Photo Background (static) */
+        .cubic-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            overflow: hidden;
+            perspective: 1000px;
+            --sz: 1800px;
+            --grid-sz: 0;
+            --rev-dis: 0;
+        }
+
+        .cubic-bg > div {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            display: grid;
+            place-items: center;
+            grid-template-columns: repeat(var(--grid-sz), 1fr);
+            grid-template-rows: repeat(var(--grid-sz), 1fr);
+            gap: 4px;
+        }
+
+        .cubic-bg > div::after {
+            content: "";
+            display: block;
+            height: 100%;
+            background: transparent;
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .cubic-bg > div > div {
+            width: 100%;
+            height: 100%;
+            background-size: cover !important;
+            background-position: center !important;
+            background: repeating-linear-gradient(
+                45deg,
+                #94a4c211 0%,
+                #94a4c211 5%,
+                transparent 5%,
+                transparent 10%
+            );
+            opacity: 0;
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+        }
+
+        .cubic-bg > div > div.loaded {
+            opacity: 0.35;
+            transform: translate3d(0, 0, -1px);
+        }
+
+        .cubic-bg > div.top {
+            top: 0;
+            transform-origin: top center;
+            transform: rotateX(-90deg);
+            height: var(--sz);
+        }
+
+        .cubic-bg > div.left {
+            left: 0;
+            transform-origin: center left;
+            transform: rotateY(90deg);
+            width: var(--sz);
+        }
+
+        .cubic-bg > div.bottom {
+            bottom: 0;
+            transform-origin: bottom center;
+            transform: rotateX(90deg);
+            height: var(--sz);
+        }
+
+        .cubic-bg > div.right {
+            right: 0;
+            transform-origin: center right;
+            transform: rotateY(-90deg);
+            width: var(--sz);
+        }
+
+        .dim-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 3;
+            pointer-events: none;
+            background: rgba(0, 0, 0, var(--bg-dim));
+        }
+
         /* Loading animation */
         .loader {
             position: fixed;
@@ -788,6 +882,17 @@
 
     <!-- Scan lines overlay -->
     <div class="scan-lines"></div>
+
+    <!-- Cubic photo background -->
+    <section class="cubic-bg" aria-hidden="true">
+        <div class="right"></div>
+        <div class="bottom"></div>
+        <div class="left"></div>
+        <div class="top"></div>
+    </section>
+
+    <!-- Dim overlay -->
+    <div class="dim-overlay" aria-hidden="true"></div>
 
     <!-- Touch glow effect -->
     <div class="touch-glow" id="touchGlow"></div>
@@ -918,6 +1023,8 @@
 
     <script type="module" src="Assets/js/explore-menu.js"></script>
 
+    <script type="module" src="Assets/js/cubic-bg.js"></script>
+
     <script>
         // ============ LOADER ============
         window.addEventListener('load', () => {
@@ -935,7 +1042,7 @@
         // ============ GYROSCOPE / DEVICE ORIENTATION ============
         let gyroEnabled = false;
         const container = document.getElementById('container');
-        const logo = document.getElementById('logo');
+        const logo = document.getElementById('heroReactRoot') || document.getElementById('logo');
         const orbs = document.querySelectorAll('.orb');
         const gyroIndicator = document.getElementById('gyroIndicator');
         const linkButtons = document.querySelectorAll('.link-btn');
@@ -1136,29 +1243,7 @@
             });
         });
 
-        // ============ PARALLAX SCROLL ============
-        let ticking = false;
-
-        window.addEventListener('scroll', () => {
-            if (!ticking) {
-                requestAnimationFrame(() => {
-                    const scrollY = window.scrollY;
-                    
-                    // Parallax on orbs
-                    orbs.forEach((orb, index) => {
-                        const speed = 0.5 + (index * 0.2);
-                        orb.style.transform = `translateY(${scrollY * speed}px)`;
-                    });
-
-                    // Parallax on logo
-                    const logoSection = document.getElementById('logoSection');
-                    logoSection.style.transform = `translateY(${scrollY * 0.3}px)`;
-
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        });
+        // ============ PARALLAX SCROLL (disabled for speed) ============
 
         // ============ HAPTIC FEEDBACK (if supported) ============
         function vibrate(duration = 10) {
