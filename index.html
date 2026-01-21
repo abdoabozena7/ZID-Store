@@ -610,75 +610,6 @@
             }
         }
 
-        /* Circular Gallery */
-        .gallery-section {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            margin: 40px 0 10px;
-        }
-
-        #circularGallery {
-            width: min(940px, 95vw);
-            height: 240px;
-            position: relative;
-            border-radius: 24px;
-            overflow: hidden;
-            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.06), rgba(5, 3, 13, 0.9));
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.45), 0 0 40px rgba(82, 39, 255, 0.2);
-        }
-
-        #circularGallery canvas {
-            width: 100%;
-            height: 100%;
-            display: block;
-            position: absolute;
-            inset: 0;
-        }
-
-        .gallery-fallback-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 14px;
-            padding: 16px;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            position: relative;
-            z-index: 1;
-        }
-
-        .gallery-webgl .gallery-fallback-grid {
-            display: grid;
-        }
-
-        .gallery-fallback-card {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 14px;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-        }
-
-        .gallery-fallback-card img {
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        .gallery-fallback-card p {
-            margin: 0;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.85);
-            text-align: center;
-        }
-
         /* Ripple Effect */
         .ripple {
             position: absolute;
@@ -872,7 +803,7 @@
         <div class="logo-section" id="logoSection">
             <div class="logo-wrapper">
                 <div class="logo-glow"></div>
-                <div class="logo" id="logo"><img src="Assets\logo\ZID.jpg" style="width: 120px; height: 120px; object-fit: cover; border-radius: 30px;"></div>
+                <div class="logo" id="logo"><img src="Assets\logo\ZID.jpg" style="width: 90px; height: 90px; object-fit: cover; border-radius: 19px;"></div>
             </div>
             <h1 class="store-name">ZID Store</h1>
             <p class="tagline">الزوز ستور</p>
@@ -962,22 +893,9 @@
             </div>
         </div>
 
-        
-        <div class="gallery-section">
-            <div id="circularGallery" aria-label="معرض المنتجات">
-                <div class="gallery-fallback-grid">
-                    <div class="gallery-fallback-card"><img src="Assets/images/1.png" alt="منتج 1"><p>منتج 1</p></div>
-                    <div class="gallery-fallback-card"><img src="Assets/images/2.png" alt="منتج 2"><p>منتج 2</p></div>
-                    <div class="gallery-fallback-card"><img src="Assets/images/3.png" alt="منتج 3"><p>منتج 3</p></div>
-                    <div class="gallery-fallback-card"><img src="Assets/images/4.png" alt="منتج 4"><p>منتج 4</p></div>
- 
-                </div>
-            </div>
-        </div>
-
-<!-- Footer -->
+        <!-- Footer -->
         <div class="footer">
-            <p> ABDO ABOZENA - 01101489531 ©</p>
+            <p>© ABDO ABOZENA - 01101489531</p>
         </div>
     </div>
 
@@ -995,9 +913,7 @@
         📱 حرك الموبايل لتجربة التأثير ثلاثي الأبعاد
     </div>
 
-    <script type="module" src="Assets/js/hero-lanyard.js"></script>
     <script type="module" src="Assets/js/explore-menu.js"></script>
-    <script type="module" src="Assets/js/circular-gallery.js"></script>
 
     <script>
         // ============ LOADER ============
