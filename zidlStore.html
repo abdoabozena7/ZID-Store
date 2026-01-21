@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ZID Store</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-gradient-1: #0f0c29;
+            --bg-gradient-2: #302b63;
+            --bg-gradient-3: #24243e;
+            --neon-cyan: #00f5ff;
+            --neon-magenta: #ff00ff;
+            --neon-gold: #ffd700;
+            --neon-green: #00ff88;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        html, body {
+            overflow-x: hidden;
+            font-family: 'Tajawal', sans-serif;
+            background: var(--bg-dark);
+            min-height: 100vh;
+            color: white;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-gradient-1), var(--bg-gradient-2), var(--bg-gradient-3));
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Particle Container */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0) rotate(0deg); }
+            25% { transform: translateY(-30px) translateX(20px) rotate(90deg); }
+            50% { transform: translateY(-10px) translateX(-20px) rotate(180deg); }
+            75% { transform: translateY(-40px) translateX(10px) rotate(270deg); }
+        }
+
+        /* Floating Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.4;
+            z-index: 0;
+            animation: orbFloat 10s infinite ease-in-out;
+        }
+
+        .orb-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--neon-cyan);
+            top: -100px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 250px;
+            height: 250px;
+            background: var(--neon-magenta);
+            bottom: 20%;
+            left: -80px;
+            animation-delay: -5s;
+        }
+
+        .orb-3 {
+            width: 200px;
+            height: 200px;
+            background: var(--neon-gold);
+            bottom: -50px;
+            right: -50px;
+            animation-delay: -2.5s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            perspective: 1000px;
+        }
+
+        /* Logo Section */
+        .logo-section {
+            text-align: center;
+            margin-bottom: 50px;
+            opacity: 0;
+            transform: translateY(50px) scale(0.8);
+            animation: heroEnter 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes heroEnter {
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .logo-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .logo-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, var(--neon-cyan) 0%, transparent 70%);
+            filter: blur(30px);
+            opacity: 0.6;
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+            50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.8; }
+        }
+
+        .logo {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta));
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: 900;
+            color: white;
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+            box-shadow: 
+                0 0 30px rgba(0, 245, 255, 0.5),
+                0 0 60px rgba(255, 0, 255, 0.3),
+                inset 0 0 30px rgba(255,255,255,0.1);
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+        }
+
+        .store-name {
+            font-size: 42px;
+            font-weight: 900;
+            margin-top: 25px;
+            background: linear-gradient(90deg, var(--neon-cyan), white, var(--neon-magenta));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s linear infinite;
+            text-shadow: none;
+        }
+
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
+
+        .tagline {
+            font-size: 16px;
+            color: rgba(255,255,255,0.6);
+            margin-top: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* Links Section */
+        .links-section {
+            width: 100%;
+            max-width: 350px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .link-card {
+            position: relative;
+            opacity: 0;
+            transform: translateY(60px) rotateX(-10deg);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .link-card.visible {
+            opacity: 1;
+            transform: translateY(0) rotateX(0);
+        }
+
+        .link-card:nth-child(1) { animation-delay: 0.2s; }
+        .link-card:nth-child(2) { animation-delay: 0.4s; }
+        .link-card:nth-child(3) { animation-delay: 0.6s; }
+
+        .link-btn {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            padding: 20px 25px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 700;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: hidden;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .link-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .link-btn:active::before,
+        .link-btn:hover::before {
+            left: 100%;
+        }
+
+        .link-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            padding: 2px;
+            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.1), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .link-btn:active::after,
+        .link-btn:hover::after {
+            opacity: 1;
+        }
+
+        /* Instagram */
+        .link-instagram .icon-wrapper {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        }
+
+        .link-instagram:active,
+        .link-instagram:hover {
+            box-shadow: 
+                0 10px 40px rgba(225, 48, 108, 0.4),
+                0 0 0 1px rgba(225, 48, 108, 0.3);
+            transform: translateY(-5px) scale(1.02);
+            border-color: rgba(225, 48, 108, 0.5);
+        }
+
+        /* TikTok */
+        .link-tiktok .icon-wrapper {
+            background: linear-gradient(45deg, #00f2ea, #ff0050);
+        }
+
+        .link-tiktok:active,
+        .link-tiktok:hover {
+            box-shadow: 
+                0 10px 40px rgba(0, 242, 234, 0.4),
+                0 0 0 1px rgba(255, 0, 80, 0.3);
+            transform: translateY(-5px) scale(1.02);
+            border-color: rgba(0, 242, 234, 0.5);
+        }
+
+        /* WhatsApp */
+        .link-whatsapp .icon-wrapper {
+            background: linear-gradient(45deg, #25d366, #128c7e);
+        }
+
+        .link-whatsapp:active,
+        .link-whatsapp:hover {
+            box-shadow: 
+                0 10px 40px rgba(37, 211, 102, 0.4),
+                0 0 0 1px rgba(37, 211, 102, 0.3);
+            transform: translateY(-5px) scale(1.02);
+            border-color: rgba(37, 211, 102, 0.5);
+        }
+
+        .icon-wrapper {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .link-btn:active .icon-wrapper,
+        .link-btn:hover .icon-wrapper {
+            transform: rotate(-10deg) scale(1.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+
+        .icon-wrapper svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
+        }
+
+        .link-text {
+            flex: 1;
+        }
+
+        .link-title {
+            display: block;
+            font-weight: 700;
+        }
+
+        .link-subtitle {
+            display: block;
+            font-size: 12px;
+            opacity: 0.6;
+            margin-top: 2px;
+        }
+
+        .link-arrow {
+            width: 24px;
+            height: 24px;
+            opacity: 0.5;
+            transition: all 0.3s;
+        }
+
+        .link-btn:active .link-arrow,
+        .link-btn:hover .link-arrow {
+            opacity: 1;
+            transform: translateX(-5px);
+        }
+
+        /* Ripple Effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            opacity: 0;
+            animation: fadeInUp 1s 1s forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 0.5;
+            }
+        }
+
+        .footer p {
+            font-size: 12px;
+            color: rgba(255,255,255,0.4);
+        }
+
+        /* Gyro indicator */
+        .gyro-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 16px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: 100;
+        }
+
+        .gyro-indicator.active {
+            animation: fadeOut 2s 2s forwards;
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; }
+        }
+
+        /* Touch feedback */
+        .touch-glow {
+            position: fixed;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 245, 255, 0.3) 0%, transparent 70%);
+            pointer-events: none;
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.3s, opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .touch-glow.active {
+            transform: translate(-50%, -50%) scale(1);
+            animation: touchPulse 0.5s ease-out;
+        }
+
+        @keyframes touchPulse {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+        }
+
+        /* Magnetic cursor effect area */
+        .magnetic-area {
+            position: relative;
+        }
+
+        /* Scan lines overlay */
+        .scan-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.03) 2px,
+                rgba(0, 0, 0, 0.03) 4px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Loading animation */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-ring {
+            width: 60px;
+            height: 60px;
+            border: 3px solid transparent;
+            border-top-color: var(--neon-cyan);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loader-ring::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border: 3px solid transparent;
+            border-top-color: var(--neon-magenta);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite reverse;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Entrance animations for cards */
+        @keyframes cardEnter {
+            0% {
+                opacity: 0;
+                transform: translateY(60px) rotateX(-10deg) scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotateX(0) scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-ring"></div>
+    </div>
+
+    <!-- Scan lines overlay -->
+    <div class="scan-lines"></div>
+
+    <!-- Touch glow effect -->
+    <div class="touch-glow" id="touchGlow"></div>
+
+    <!-- Floating Orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- Particles -->
+    <div id="particles"></div>
+
+    <!-- Main Content -->
+    <div class="container" id="container">
+        <!-- Logo Section -->
+        <div class="logo-section" id="logoSection">
+            <div class="logo-wrapper">
+                <div class="logo-glow"></div>
+                <div class="logo" id="logo"><img src="Assets\logo\ZID.jpg" style="width: 90px; height: 90px; object-fit: cover; border-radius: 19px;"></div>
+            </div>
+            <h1 class="store-name">ZID Store</h1>
+            <p class="tagline">الزوز ستور</p>
+        </div>
+
+        <!-- Links Section -->
+        <div class="links-section" id="linksSection">
+            <!-- Instagram -->
+            <div class="link-card magnetic-area">
+                <a href="https://www.instagram.com/zid.store1?igsh=MWw4YnZta3BnNXdqaw%3D%3D&utm_source=qr" 
+                   class="link-btn link-instagram" 
+                   target="_blank">
+                    <div class="icon-wrapper">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                    </div>
+                    <div class="link-text">
+                        <span class="link-title">Instagram</span>
+                        <span class="link-subtitle">تابعنا على انستجرام</span>
+                    </div>
+                    <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- TikTok -->
+            <div class="link-card magnetic-area">
+                <a href="https://www.tiktok.com/@zid.store11" 
+                   class="link-btn link-tiktok" 
+                   target="_blank">
+                    <div class="icon-wrapper">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                        </svg>
+                    </div>
+                    <div class="link-text">
+                        <span class="link-title">TikTok</span>
+                        <span class="link-subtitle">شوف فيديوهاتنا</span>
+                    </div>
+                    <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- WhatsApp -->
+            <div class="link-card magnetic-area">
+                <a href="https://wa.me/201147373009" 
+                   class="link-btn link-whatsapp" 
+                   target="_blank">
+                    <div class="icon-wrapper">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                        </svg>
+                    </div>
+                    <div class="link-text">
+                        <span class="link-title">WhatsApp</span>
+                        <span class="link-subtitle">تواصل معانا مباشرة</span>
+                    </div>
+                    <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>© ABDO ABOZENA - 01101489531</p>
+        </div>
+    </div>
+
+    <!-- Gyro Indicator -->
+    <div class="gyro-indicator" id="gyroIndicator">
+        📱 حرك الموبايل لتجربة التأثير ثلاثي الأبعاد
+    </div>
+
+    <script>
+        // ============ LOADER ============
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 800);
+        });
+
+        // ============ PARTICLES ============
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const colors = ['#00f5ff', '#ff00ff', '#ffd700', '#00ff88', '#ffffff'];
+            
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 4 + 2;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                particle.style.cssText = `
+                    width: ${size}px;
+                    height: ${size}px;
+                    background: ${color};
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                    opacity: ${Math.random() * 0.5 + 0.2};
+                    animation-delay: ${Math.random() * 20}s;
+                    animation-duration: ${Math.random() * 20 + 15}s;
+                    box-shadow: 0 0 ${size * 2}px ${color};
+                `;
+                
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // ============ GYROSCOPE / DEVICE ORIENTATION ============
+        let gyroEnabled = false;
+        const container = document.getElementById('container');
+        const logo = document.getElementById('logo');
+        const orbs = document.querySelectorAll('.orb');
+        const gyroIndicator = document.getElementById('gyroIndicator');
+
+        function handleOrientation(event) {
+            if (!gyroEnabled) {
+                gyroEnabled = true;
+                gyroIndicator.style.opacity = '1';
+                gyroIndicator.classList.add('active');
+            }
+
+            const gamma = event.gamma || 0; // Left/Right tilt (-90 to 90)
+            const beta = event.beta || 0;   // Front/Back tilt (-180 to 180)
+            
+            // Clamp values
+            const tiltX = Math.max(-30, Math.min(30, gamma));
+            const tiltY = Math.max(-30, Math.min(30, beta - 45)); // Offset for natural holding position
+
+            // Apply 3D transform to container
+            container.style.transform = `
+                rotateY(${tiltX * 0.3}deg) 
+                rotateX(${-tiltY * 0.3}deg)
+            `;
+
+            // Parallax effect on logo
+            logo.style.transform = `
+                translateX(${tiltX * 0.5}px) 
+                translateY(${tiltY * 0.5}px)
+                rotateY(${tiltX * 0.5}deg)
+                rotateX(${-tiltY * 0.5}deg)
+            `;
+
+            // Move orbs based on tilt
+            orbs.forEach((orb, index) => {
+                const factor = (index + 1) * 0.5;
+                orb.style.transform = `
+                    translate(${tiltX * factor}px, ${tiltY * factor}px)
+                `;
+            });
+        }
+
+        // Request permission for iOS 13+
+        function requestGyroPermission() {
+            if (typeof DeviceOrientationEvent !== 'undefined' && 
+                typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission()
+                    .then(response => {
+                        if (response === 'granted') {
+                            window.addEventListener('deviceorientation', handleOrientation);
+                        }
+                    })
+                    .catch(console.error);
+            } else {
+                window.addEventListener('deviceorientation', handleOrientation);
+            }
+        }
+
+        // Enable gyro on first touch (for iOS permission)
+        document.body.addEventListener('touchstart', function initGyro() {
+            requestGyroPermission();
+            document.body.removeEventListener('touchstart', initGyro);
+        }, { once: true });
+
+        // Try to enable immediately for Android
+        if (window.DeviceOrientationEvent) {
+            requestGyroPermission();
+        }
+
+        // ============ SCROLL ANIMATIONS (Intersection Observer) ============
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all link cards
+        document.querySelectorAll('.link-card').forEach((card, index) => {
+            setTimeout(() => {
+                card.classList.add('visible');
+            }, 800 + (index * 200));
+        });
+
+        // ============ TOUCH RIPPLE EFFECT ============
+        document.querySelectorAll('.link-btn').forEach(btn => {
+            btn.addEventListener('touchstart', function(e) {
+                const rect = this.getBoundingClientRect();
+                const touch = e.touches[0];
+                const x = touch.clientX - rect.left;
+                const y = touch.clientY - rect.top;
+
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+
+                this.appendChild(ripple);
+
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // ============ TOUCH GLOW EFFECT ============
+        const touchGlow = document.getElementById('touchGlow');
+
+        document.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            touchGlow.style.left = touch.clientX + 'px';
+            touchGlow.style.top = touch.clientY + 'px';
+            touchGlow.classList.add('active');
+        });
+
+        document.addEventListener('touchend', () => {
+            setTimeout(() => {
+                touchGlow.classList.remove('active');
+            }, 500);
+        });
+
+        // ============ MAGNETIC EFFECT ON TOUCH ============
+        document.querySelectorAll('.magnetic-area').forEach(area => {
+            const btn = area.querySelector('.link-btn');
+            
+            area.addEventListener('touchmove', (e) => {
+                const rect = area.getBoundingClientRect();
+                const touch = e.touches[0];
+                const x = touch.clientX - rect.left - rect.width / 2;
+                const y = touch.clientY - rect.top - rect.height / 2;
+                
+                btn.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px)`;
+            });
+
+            area.addEventListener('touchend', () => {
+                btn.style.transform = '';
+            });
+        });
+
+        // ============ PARALLAX SCROLL ============
+        let ticking = false;
+
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    const scrollY = window.scrollY;
+                    
+                    // Parallax on orbs
+                    orbs.forEach((orb, index) => {
+                        const speed = 0.5 + (index * 0.2);
+                        orb.style.transform = `translateY(${scrollY * speed}px)`;
+                    });
+
+                    // Parallax on logo
+                    const logoSection = document.getElementById('logoSection');
+                    logoSection.style.transform = `translateY(${scrollY * 0.3}px)`;
+
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // ============ HAPTIC FEEDBACK (if supported) ============
+        function vibrate(duration = 10) {
+            if (navigator.vibrate) {
+                navigator.vibrate(duration);
+            }
+        }
+
+        document.querySelectorAll('.link-btn').forEach(btn => {
+            btn.addEventListener('touchstart', () => vibrate(10));
+        });
+
+        // ============ EASTER EGG - Logo tap animation ============
+        let tapCount = 0;
+        logo.addEventListener('click', () => {
+            tapCount++;
+            vibrate(20);
+            
+            logo.style.animation = 'none';
+            logo.offsetHeight; // Trigger reflow
+            logo.style.animation = 'logoTap 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            
+            if (tapCount >= 5) {
+                tapCount = 0;
+                // Rainbow explosion!
+                logo.style.background = 'linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3)';
+                logo.style.backgroundSize = '400% 400%';
+                logo.style.animation = 'rainbowShift 2s ease infinite';
+                
+                setTimeout(() => {
+                    logo.style.background = 'linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta))';
+                    logo.style.animation = '';
+                }, 3000);
+            }
+        });
+
+        // Add keyframes dynamically
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes logoTap {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.2) rotate(10deg); }
+                100% { transform: scale(1); }
+            }
+            @keyframes rainbowShift {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
