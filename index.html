@@ -181,6 +181,7 @@
             width: 120px;
             height: 120px;
             background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta));
+            background: linear-gradient(135deg, var(--neon-gold), var(--neon-magenta));
             border-radius: 30px;
             display: flex;
             align-items: center;
@@ -808,7 +809,7 @@
                 <div class="logo" id="logo"><img src="Assets\logo\ZID.jpg" style="width: 120px; height: 120px; object-fit: cover; border-radius: 30px;"></div>
             </div>
             <h1 class="store-name">ZID Store</h1>
-            <p class="tagline">الزوز ستور</p>
+            <p class="tagline">عاديي برضو</p>
         </div>
 
         <!-- Links Section -->
@@ -938,18 +939,28 @@
         const orbs = document.querySelectorAll('.orb');
         const gyroIndicator = document.getElementById('gyroIndicator');
         const linkButtons = document.querySelectorAll('.link-btn');
+        const lastButton = linkButtons[linkButtons.length - 1];
         const exploreLink = document.getElementById('exploreLink');
         const exploreModal = document.getElementById('exploreModal');
         const exploreClose = document.getElementById('exploreClose');
         let gyroHoverActive = false;
         let tiltYBaseline = null;
         let lastScrollY = 0;
+        let persistentHover = false;
 
         function setGyroHover(state) {
-            if (state === gyroHoverActive) return;
+            if (!lastButton) return;
+            if (state === gyroHoverActive && !persistentHover) return;
             gyroHoverActive = state;
-            linkButtons.forEach(btn => btn.classList.toggle('is-tilt-hover', state));
+            const apply = persistentHover || state;
+            lastButton.classList.toggle('is-tilt-hover', apply);
         }
+
+        // Keep the main CTA hovered after 4s
+        setTimeout(() => {
+            persistentHover = true;
+            setGyroHover(true);
+        }, 4000);
 
         function openExplore() {
             if (!exploreModal) return;
@@ -1003,11 +1014,8 @@
             }
             const tiltYDelta = tiltY - tiltYBaseline;
 
-            // Apply 3D transform to container
-            container.style.transform = `
-                rotateY(${tiltX * 0.3}deg) 
-                rotateX(${-tiltY * 0.3}deg)
-            `;
+            // Skip moving the whole container
+            container.style.transform = '';
 
             // Parallax effect on logo
             logo.style.transform = `
@@ -1017,16 +1025,13 @@
                 rotateX(${-tiltY * 0.5}deg)
             `;
 
-            // Move orbs based on tilt
-            orbs.forEach((orb, index) => {
-                const factor = (index + 1) * 0.5;
-                orb.style.transform = `
-                    translate(${tiltX * factor}px, ${tiltY * factor}px)
-                `;
+            // Keep orbs static for performance
+            orbs.forEach((orb) => {
+                orb.style.transform = '';
             });
 
-            // Trigger hover effect via vertical tilt
-            const hoverByTilt = Math.abs(tiltYDelta) > 10;
+            // Trigger hover effect on the main CTA only
+            const hoverByTilt = Math.abs(tiltYDelta) > 8;
             setGyroHover(hoverByTilt);
         }
 
