@@ -278,7 +278,8 @@
         }
 
         .link-btn:active::before,
-        .link-btn:hover::before {
+        .link-btn:hover::before,
+        .link-btn.is-tilt-hover::before {
             left: 100%;
         }
 
@@ -298,7 +299,8 @@
         }
 
         .link-btn:active::after,
-        .link-btn:hover::after {
+        .link-btn:hover::after,
+        .link-btn.is-tilt-hover::after {
             opacity: 1;
         }
 
@@ -308,7 +310,8 @@
         }
 
         .link-instagram:active,
-        .link-instagram:hover {
+        .link-instagram:hover,
+        .link-instagram.is-tilt-hover {
             box-shadow: 
                 0 10px 40px rgba(225, 48, 108, 0.4),
                 0 0 0 1px rgba(225, 48, 108, 0.3);
@@ -322,7 +325,8 @@
         }
 
         .link-tiktok:active,
-        .link-tiktok:hover {
+        .link-tiktok:hover,
+        .link-tiktok.is-tilt-hover {
             box-shadow: 
                 0 10px 40px rgba(0, 242, 234, 0.4),
                 0 0 0 1px rgba(255, 0, 80, 0.3);
@@ -336,7 +340,8 @@
         }
 
         .link-whatsapp:active,
-        .link-whatsapp:hover {
+        .link-whatsapp:hover,
+        .link-whatsapp.is-tilt-hover {
             box-shadow: 
                 0 10px 40px rgba(37, 211, 102, 0.4),
                 0 0 0 1px rgba(37, 211, 102, 0.3);
@@ -357,7 +362,8 @@
         }
 
         .link-btn:active .icon-wrapper,
-        .link-btn:hover .icon-wrapper {
+        .link-btn:hover .icon-wrapper,
+        .link-btn.is-tilt-hover .icon-wrapper {
             transform: rotate(-10deg) scale(1.1);
             box-shadow: 0 8px 25px rgba(0,0,0,0.4);
         }
@@ -392,7 +398,8 @@
         }
 
         .link-btn:active .link-arrow,
-        .link-btn:hover .link-arrow {
+        .link-btn:hover .link-arrow,
+        .link-btn.is-tilt-hover .link-arrow {
             opacity: 1;
             transform: translateX(-5px);
         }
@@ -713,6 +720,15 @@
         const logo = document.getElementById('logo');
         const orbs = document.querySelectorAll('.orb');
         const gyroIndicator = document.getElementById('gyroIndicator');
+        const linkButtons = document.querySelectorAll('.link-btn');
+        let gyroHoverActive = false;
+        let tiltYBaseline = null;
+
+        function setGyroHover(state) {
+            if (state === gyroHoverActive) return;
+            gyroHoverActive = state;
+            linkButtons.forEach(btn => btn.classList.toggle('is-tilt-hover', state));
+        }
 
         function handleOrientation(event) {
             if (!gyroEnabled) {
@@ -727,6 +743,10 @@
             // Clamp values
             const tiltX = Math.max(-30, Math.min(30, gamma));
             const tiltY = Math.max(-30, Math.min(30, beta - 45)); // Offset for natural holding position
+            if (tiltYBaseline === null) {
+                tiltYBaseline = tiltY;
+            }
+            const tiltYDelta = tiltY - tiltYBaseline;
 
             // Apply 3D transform to container
             container.style.transform = `
@@ -749,6 +769,10 @@
                     translate(${tiltX * factor}px, ${tiltY * factor}px)
                 `;
             });
+
+            // Trigger hover effect via vertical tilt
+            const hoverByTilt = Math.abs(tiltYDelta) > 10;
+            setGyroHover(hoverByTilt);
         }
 
         // Request permission for iOS 13+
