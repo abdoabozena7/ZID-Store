@@ -25,6 +25,11 @@
             --neon-green: #00ff88;
             --glass-bg: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.1);
+            --pillar-size: 1080px;
+            --pillar-top: #5227ff;
+            --pillar-bottom: #ff9ffc;
+            --pillar-glow: rgba(82, 39, 255, 0.6);
+            --pillar-shadow: rgba(255, 159, 252, 0.45);
         }
 
         html, body {
@@ -36,9 +41,10 @@
         }
 
         body {
-            background: linear-gradient(135deg, var(--bg-gradient-1), var(--bg-gradient-2), var(--bg-gradient-3));
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
+            background: radial-gradient(circle at 50% 18%, rgba(82, 39, 255, 0.22), rgba(5, 3, 15, 0.6) 38%, rgba(5, 3, 15, 1) 70%),
+                        radial-gradient(circle at 50% 82%, rgba(255, 159, 252, 0.18), rgba(5, 3, 15, 0.95) 60%),
+                        #05030d;
+            background-size: cover;
         }
 
         @keyframes gradientShift {
