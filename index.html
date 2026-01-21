@@ -63,6 +63,7 @@
             pointer-events: none;
             z-index: 1;
             overflow: hidden;
+            display: none;
         }
 
         .particle {
@@ -86,7 +87,8 @@
             filter: blur(60px);
             opacity: 0.4;
             z-index: 0;
-            animation: orbFloat 10s infinite ease-in-out;
+            animation: none;
+            display: none;
         }
 
         .orb-1 {
@@ -204,7 +206,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: shimmer 3s linear infinite;
+            animation: none;
             text-shadow: none;
         }
 
@@ -925,30 +927,7 @@
 
         // ============ PARTICLES ============
         function createParticles() {
-            const container = document.getElementById('particles');
-            const colors = ['#00f5ff', '#ff00ff', '#ffd700', '#00ff88', '#ffffff'];
-            
-            for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                
-                const size = Math.random() * 4 + 2;
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                
-                particle.style.cssText = `
-                    width: ${size}px;
-                    height: ${size}px;
-                    background: ${color};
-                    left: ${Math.random() * 100}%;
-                    top: ${Math.random() * 100}%;
-                    opacity: ${Math.random() * 0.5 + 0.2};
-                    animation-delay: ${Math.random() * 20}s;
-                    animation-duration: ${Math.random() * 20 + 15}s;
-                    box-shadow: 0 0 ${size * 2}px ${color};
-                `;
-                
-                container.appendChild(particle);
-            }
+            return; // disabled for performance
         }
         createParticles();
 
