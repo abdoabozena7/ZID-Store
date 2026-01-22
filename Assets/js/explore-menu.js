@@ -1002,7 +1002,7 @@ function InfiniteMenu({ items = [], scale = 1.0 }) {
           {
             style: {
               position: 'absolute',
-              bottom: '200px',
+              bottom: '450px',
               left: '50%',
               transform: 'translateX(-50%)',
               padding: '12px 18px',
