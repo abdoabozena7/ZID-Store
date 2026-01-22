@@ -1127,7 +1127,12 @@
                 const OCT = 10;
 
                 const fragment = `
+      #ifdef GL_FRAGMENT_PRECISION_HIGH
+      precision highp float;
+      #else
       precision mediump float;
+      #endif
+
       uniform vec2 iResolution;
       uniform float iTime;
       uniform float uHue;
@@ -1173,7 +1178,8 @@
         uv.x *= iResolution.x / iResolution.y;
         uv.x += uXOffset;
 
-        uv += 2.0 * fbm(uv*uSize + 0.8*iTime*uSpeed) - 1.0;
+        float wobble = fbm(vec2(uv.y * uSize, iTime * uSpeed * 0.8)) - 0.5;
+        uv.x += wobble * 0.9;
 
         float dist = abs(uv.x) + 0.002;
         vec3 base = hsv2rgb(vec3(uHue/360.0, 0.7, 0.8));
