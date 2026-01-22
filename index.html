@@ -928,7 +928,7 @@
                 <div class="logo" id="logo"><img src="Assets\logo\ZID.jpg" style="width: 120px; height: 120px; object-fit: cover; border-radius: 30px;"></div>
             </div>
             <h1 class="store-name">ZID Store</h1>
-            <p class="tagline">عاديي برضو</p>
+            <p class="tagline">عاديي برض</p>
         </div>
 
         <!-- Links Section -->
@@ -1046,13 +1046,18 @@
             if (!gl) return;
 
             const resizeCanvas = () => {
-                const w = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-                const h = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-                const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                const wrap = document.querySelector('.lightning-wrap');
+                const rect = wrap ? wrap.getBoundingClientRect() : { width: window.innerWidth || 0, height: window.innerHeight || 0 };
+                const isMobile = rect.width < 640;
+                const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+                const w = rect.width;
+                const h = rect.height;
                 canvas.style.width = '100vw';
                 canvas.style.height = '100vh';
                 canvas.width = Math.round(w * dpr);
                 canvas.height = Math.round(h * dpr);
+                params._isMobile = isMobile;
+                params._dpr = dpr;
             };
             resizeCanvas();
             window.addEventListener('resize', resizeCanvas);
@@ -1194,12 +1199,29 @@
               xOffset: 0.0,
               speed: 1.0,
               intensity: 1.0,
-              size: 1.0
+              size: 1.0,
+              _isMobile: false,
+              _dpr: 1
+            };
+
+            const tuneForViewport = () => {
+              if (params._isMobile) {
+                params.speed = 0.7;
+                params.intensity = 0.7;
+                params.size = 0.7;
+                params.xOffset = 0.0;
+              } else {
+                params.speed = 1.0;
+                params.intensity = 1.0;
+                params.size = 1.0;
+                params.xOffset = 0.0;
+              }
             };
 
             const startTime = performance.now();
             const render = () => {
               resizeCanvas();
+              tuneForViewport();
               gl.viewport(0, 0, canvas.width, canvas.height);
               gl.uniform2f(iResolutionLocation, canvas.width, canvas.height);
               const currentTime = performance.now();
