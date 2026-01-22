@@ -47,6 +47,13 @@
                         radial-gradient(circle at 50% 82%, rgba(255, 159, 252, 0.18), rgba(5, 3, 15, 0.95) 60%),
                         #05030d;
             background-size: cover;
+            min-height: 100svh;
+        }
+
+        @supports (height: 100dvh) {
+            body {
+                min-height: 100dvh;
+            }
         }
 
         @keyframes gradientShift {
@@ -926,7 +933,7 @@
         <div class="logo-section" id="logoSection">
             <div class="logo-wrapper">
                 <div class="logo-glow"></div>
-                <div class="logo" id="logo"><img src="Assets\logo\ZID.jpg" style="width: 120px; height: 120px; object-fit: cover; border-radius: 30px;"></div>
+                <div class="logo" id="logo"><img src="Assets/logo/ZID.jpg" style="width: 120px; height: 120px; object-fit: cover; border-radius: 30px;"></div>
             </div>
             <h1 class="store-name">ZID Store</h1>
             <p class="tagline">عاديي برضو</p>
@@ -1056,6 +1063,7 @@
                     _isMobile: false,
                     _dpr: 1
                 };
+                let needsResizeSync = true;
 
                 const getViewportSize = () => {
                     if (window.visualViewport) {
@@ -1085,6 +1093,7 @@
                     params._isMobile = isMobile;
                     params._dpr = dpr;
                     gl.viewport(0, 0, canvas.width, canvas.height);
+                    needsResizeSync = true;
                 };
 
                 let resizeTimer = 0;
@@ -1250,7 +1259,10 @@
                 const render = () => {
                     canvas.style.display = 'block';
                     tuneForViewport();
-                    gl.viewport(0, 0, canvas.width, canvas.height);
+                    if (needsResizeSync) {
+                        gl.viewport(0, 0, canvas.width, canvas.height);
+                        needsResizeSync = false;
+                    }
                     gl.uniform2f(iResolutionLocation, canvas.width, canvas.height);
                     const currentTime = performance.now();
                     gl.uniform1f(iTimeLocation, (currentTime - startTime) / 1000.0);
