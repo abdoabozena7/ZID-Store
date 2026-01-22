@@ -283,6 +283,8 @@
         .link-card:nth-child(1) { animation-delay: 0.2s; }
         .link-card:nth-child(2) { animation-delay: 0.4s; }
         .link-card:nth-child(3) { animation-delay: 0.6s; }
+        .link-card:nth-child(4) { animation-delay: 0.8s; }
+        .link-card:nth-child(5) { animation-delay: 1s; }
 
         .link-btn {
             display: flex;
@@ -356,6 +358,21 @@
                 0 0 0 1px rgba(225, 48, 108, 0.3);
             transform: translateY(-5px) scale(1.02);
             border-color: rgba(225, 48, 108, 0.5);
+        }
+
+        /* E& Cash */
+        .link-cash .icon-wrapper {
+            background: linear-gradient(45deg, #ffffff, #fefeff);
+        }
+
+        .link-cash:active,
+        .link-cash:hover,
+        .link-cash.is-tilt-hover {
+            box-shadow: 
+                0 10px 40px rgba(0, 114, 255, 0.35),
+                0 0 0 1px rgba(0, 198, 255, 0.35);
+            transform: translateY(-5px) scale(1.02);
+            border-color: rgba(0, 198, 255, 0.5);
         }
 
         /* TikTok */
@@ -958,7 +975,25 @@
 
                     <div class="link-text">
                         <span class="link-title">شوف منتجاتنا</span>
-                        <span class="link-subtitle">تابع الجديد دايما</span>
+                        <span class="link-subtitle">تقدر تشوف باقي  اللبس من هنا</span>
+                    </div>
+                    <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                </a>
+            </div>
+            
+            <!-- E& Cash -->
+            <div class="link-card magnetic-area">
+                <a href="https://flous.page.link/oZyi"
+                   class="link-btn link-cash"
+                   target="_blank">
+                    <div class="icon-wrapper">
+                        <img src="Assets/icons/etisalat_logo.svg" alt="E& Cash" style="width: 28px; height: 28px;">
+                    </div>
+                    <div class="link-text">
+                        <span class="link-title">E& Cash</span>
+                        <span class="link-subtitle"> من هنا تقدر تدفع من محفظه اتصلات</span>
                     </div>
                     <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M19 12H5M12 19l-7-7 7-7"/>
@@ -983,6 +1018,7 @@
                     </svg>
                 </a>
             </div>
+            
             <!-- Instagram -->
             <div class="link-card magnetic-area">
                 <a href="https://www.instagram.com/zid.store1?igsh=MWw4YnZta3BnNXdqaw%3D%3D&utm_source=qr" 
@@ -1002,6 +1038,7 @@
                     </svg>
                 </a>
             </div>
+
 
             <!-- TikTok -->
             <div class="link-card magnetic-area">
