@@ -1238,10 +1238,6 @@
 
                 const startTime = performance.now();
                 const render = () => {
-                    if (params._isMobile) {
-                        canvas.style.display = 'none';
-                        return;
-                    }
                     canvas.style.display = 'block';
                     tuneForViewport();
                     gl.viewport(0, 0, canvas.width, canvas.height);
