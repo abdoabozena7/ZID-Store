@@ -750,32 +750,6 @@
             color: rgba(255,255,255,0.4);
         }
 
-        /* Gyro indicator */
-        .gyro-indicator {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 8px 16px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            font-size: 12px;
-            color: rgba(255,255,255,0.6);
-            opacity: 0;
-            transition: opacity 0.5s;
-            z-index: 100;
-        }
-
-        .gyro-indicator.active {
-            animation: fadeOut 2s 2s forwards;
-        }
-
-        @keyframes fadeOut {
-            to { opacity: 0; }
-        }
-
         /* Touch feedback */
         .touch-glow {
             position: fixed;
@@ -1085,20 +1059,21 @@
             <div id="exploreReactRoot"></div>
         </div>
     </div>
-
-    <!-- Gyro Indicator -->
-    <div class="gyro-indicator" id="gyroIndicator">
-        📱 حرك الموبايل لتجربة التأثير ثلاثي الأبعاد
-    </div>
-
     <script type="module" src="Assets/js/explore-menu.js"></script>
 
     <script>
+        const lightningEnabled = true;
+        const lightningResolutionScale = 1;
+
         // ============ LIGHTNING BACKGROUND (iOS/Android stable) ============
         (function () {
             const canvas = document.getElementById('lightningCanvas');
             const wrap = document.querySelector('.lightning-wrap');
             if (!canvas || !wrap) return;
+            if (!lightningEnabled) {
+                wrap.style.display = 'none';
+                return;
+            }
 
             let gl = null;
             let program = null;
@@ -1111,15 +1086,10 @@
                 speed: 1.0,
                 intensity: 1.0,
                 size: 1.0,
-                isMobile: false,
                 dpr: 1,
                 needsViewport: true,
                 lastFrame: 0
             };
-
-            const isMobileDevice = () =>
-                matchMedia('(hover: none) and (pointer: coarse)').matches ||
-                /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
 
             const getViewport = () => {
                 const vv = window.visualViewport;
@@ -1160,7 +1130,7 @@
       void main(){ gl_Position = vec4(aPosition,0.0,1.0); }
     `;
 
-                const OCT = isMobileDevice() ? 6 : 10;
+                const OCT = 10;
 
                 const fragment = `
       precision mediump float;
@@ -1266,27 +1236,12 @@
                 return true;
             };
 
-            const applyTuning = () => {
-                params.isMobile = isMobileDevice();
-                if (params.isMobile) {
-                    params.speed = 0.45;
-                    params.intensity = 0.55;
-                    params.size = 0.6;
-                    params.xOffset = 0.0;
-                } else {
-                    params.speed = 1.0;
-                    params.intensity = 1.0;
-                    params.size = 1.0;
-                    params.xOffset = 0.0;
-                }
-            };
-
             const resize = () => {
                 const { w, h, ox, oy } = getViewport();
                 wrap.style.transform = `translate3d(${ox}px, ${oy}px, 0)`;
                 wrap.style.width = w + 'px';
                 wrap.style.height = h + 'px';
-                params.dpr = params.isMobile ? 1 : Math.min(devicePixelRatio || 1, 2);
+                params.dpr = Math.max(0.5, Math.min((devicePixelRatio || 1) * lightningResolutionScale, 3));
                 canvas.style.width = w + 'px';
                 canvas.style.height = h + 'px';
                 canvas.width = Math.max(1, Math.round(w * params.dpr));
@@ -1299,7 +1254,6 @@
                 return () => {
                     cancelAnimationFrame(raf);
                     raf = requestAnimationFrame(() => {
-                        applyTuning();
                         resize();
                     });
                 };
@@ -1311,11 +1265,6 @@
                     return;
                 }
 
-                const minDt = params.isMobile ? (1000 / 40) : 0;
-                if (minDt && (now - params.lastFrame) < minDt) {
-                    rafId = requestAnimationFrame(render);
-                    return;
-                }
                 params.lastFrame = now;
 
                 if (!gl || !program) return;
@@ -1339,7 +1288,6 @@
             };
 
             const init = () => {
-                applyTuning();
                 if (!initGL()) return;
                 resize();
 
@@ -1376,35 +1324,11 @@
         }
         createParticles();
 
-        // ============ GYROSCOPE / DEVICE ORIENTATION ============
-        let gyroEnabled = false;
-        const container = document.getElementById('container');
         const logo = document.getElementById('heroReactRoot') || document.getElementById('logo');
-        const orbs = document.querySelectorAll('.orb');
-        const gyroIndicator = document.getElementById('gyroIndicator');
-        const linkButtons = document.querySelectorAll('.link-btn');
-        const lastButton = linkButtons[0];
         const exploreLink = document.getElementById('exploreLink');
         const exploreModal = document.getElementById('exploreModal');
         const exploreClose = document.getElementById('exploreClose');
-        let gyroHoverActive = false;
-        let tiltYBaseline = null;
         let lastScrollY = 0;
-        let persistentHover = false;
-
-        function setGyroHover(state) {
-            if (!lastButton) return;
-            if (state === gyroHoverActive && !persistentHover) return;
-            gyroHoverActive = state;
-            const apply = persistentHover || state;
-            lastButton.classList.toggle('is-tilt-hover', apply);
-        }
-
-        // Keep the main CTA hovered after 4s
-        setTimeout(() => {
-            persistentHover = true;
-            setGyroHover(true);
-        }, 4000);
 
         function openExplore() {
             if (!exploreModal) return;
@@ -1439,72 +1363,6 @@
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeExplore();
         });
-
-        function handleOrientation(event) {
-            if (!gyroEnabled) {
-                gyroEnabled = true;
-                gyroIndicator.style.opacity = '1';
-                gyroIndicator.classList.add('active');
-            }
-
-            const gamma = event.gamma || 0; // Left/Right tilt (-90 to 90)
-            const beta = event.beta || 0;   // Front/Back tilt (-180 to 180)
-            
-            // Clamp values
-            const tiltX = Math.max(-30, Math.min(30, gamma));
-            const tiltY = Math.max(-30, Math.min(30, beta - 45)); // Offset for natural holding position
-            if (tiltYBaseline === null) {
-                tiltYBaseline = tiltY;
-            }
-            const tiltYDelta = tiltY - tiltYBaseline;
-
-            // Skip moving the whole container
-            container.style.transform = '';
-
-            // Parallax effect on logo
-            logo.style.transform = `
-                translateX(${tiltX * 0.5}px) 
-                translateY(${tiltY * 0.5}px)
-                rotateY(${tiltX * 0.5}deg)
-                rotateX(${-tiltY * 0.5}deg)
-            `;
-
-            // Keep orbs static for performance
-            orbs.forEach((orb) => {
-                orb.style.transform = '';
-            });
-
-            // Trigger hover effect on the main CTA only
-            const hoverByTilt = Math.abs(tiltYDelta) > 8;
-            setGyroHover(hoverByTilt);
-        }
-
-        // Request permission for iOS 13+
-        function requestGyroPermission() {
-            if (typeof DeviceOrientationEvent !== 'undefined' && 
-                typeof DeviceOrientationEvent.requestPermission === 'function') {
-                DeviceOrientationEvent.requestPermission()
-                    .then(response => {
-                        if (response === 'granted') {
-                            window.addEventListener('deviceorientation', handleOrientation);
-                        }
-                    })
-                    .catch(console.error);
-            } else {
-                window.addEventListener('deviceorientation', handleOrientation);
-            }
-        }
-
-        // Enable gyro on first touch (for iOS permission)
-        document.body.addEventListener('touchstart', function initGyro() {
-            requestGyroPermission();
-            document.body.removeEventListener('touchstart', initGyro);
-        }, { once: true });
-
-        // Try to enable immediately for Android
-        if (window.DeviceOrientationEvent) {
-            requestGyroPermission();
-        }
 
         // ============ SCROLL ANIMATIONS (Intersection Observer) ============
         const observerOptions = {
