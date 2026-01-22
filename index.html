@@ -136,17 +136,18 @@
         /* Lightning background */
         .lightning-wrap {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            inset: 0;
+            width: 100%;
+            height: 100%;
             z-index: 1;
             pointer-events: none;
-            transform: translate3d(0, 0, 0);
-            will-change: transform;
+            transform: none !important;
+            will-change: auto;
         }
 
         #lightningCanvas {
+            position: absolute;
+            inset: 0;
             width: 100%;
             height: 100%;
             display: block;
@@ -1092,16 +1093,9 @@
             };
 
             const getViewport = () => {
-                const vv = window.visualViewport;
-                if (vv) {
-                    return {
-                        w: Math.round(vv.width),
-                        h: Math.round(vv.height),
-                        ox: Math.round(vv.offsetLeft || 0),
-                        oy: Math.round(vv.offsetTop || 0)
-                    };
-                }
-                return { w: Math.round(innerWidth || 0), h: Math.round(innerHeight || 0), ox: 0, oy: 0 };
+                const w = Math.round(document.documentElement.clientWidth || window.innerWidth || 0);
+                const h = Math.round(document.documentElement.clientHeight || window.innerHeight || 0);
+                return { w, h };
             };
 
             const compileShader = (src, type) => {
@@ -1237,8 +1231,8 @@
             };
 
             const resize = () => {
-                const { w, h, ox, oy } = getViewport();
-                wrap.style.transform = `translate3d(${ox}px, ${oy}px, 0)`;
+                const { w, h } = getViewport();
+                wrap.style.transform = 'none';
                 wrap.style.width = w + 'px';
                 wrap.style.height = h + 'px';
                 params.dpr = Math.max(0.5, Math.min((devicePixelRatio || 1) * lightningResolutionScale, 3));
@@ -1293,10 +1287,6 @@
 
                 window.addEventListener('resize', scheduleResize);
                 window.addEventListener('orientationchange', () => setTimeout(scheduleResize, 150));
-                if (window.visualViewport) {
-                    visualViewport.addEventListener('resize', scheduleResize);
-                    visualViewport.addEventListener('scroll', scheduleResize);
-                }
                 document.addEventListener('visibilitychange', () => {
                     if (!document.hidden) scheduleResize();
                 });
