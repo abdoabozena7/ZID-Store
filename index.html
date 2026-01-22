@@ -38,6 +38,7 @@
             font-family: 'Tajawal', sans-serif;
             background: var(--bg-dark);
             min-height: 100vh;
+            height: 100%;
             color: white;
         }
 
@@ -131,8 +132,8 @@
             inset: 0;
             z-index: 1;
             pointer-events: none;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
         }
 
         #lightningCanvas {
@@ -1071,7 +1072,10 @@
 
                 const resizeCanvas = () => {
                     const { width, height } = getViewportSize();
-                    const isMobile = width < 640;
+                    const isMobile = (
+                        matchMedia('(hover: none) and (pointer: coarse)').matches ||
+                        /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '')
+                    );
                     const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
 
                     canvas.style.width = width + 'px';
@@ -1083,10 +1087,10 @@
                     gl.viewport(0, 0, canvas.width, canvas.height);
                 };
 
-                let resizeRaf = 0;
+                let resizeTimer = 0;
                 const scheduleResize = () => {
-                    cancelAnimationFrame(resizeRaf);
-                    resizeRaf = requestAnimationFrame(() => resizeCanvas());
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(() => resizeCanvas(), 80);
                 };
 
                 resizeCanvas();
@@ -1230,9 +1234,9 @@
 
                 const tuneForViewport = () => {
                     if (params._isMobile) {
-                        params.speed = 0.7;
-                        params.intensity = 0.7;
-                        params.size = 0.7;
+                        params.speed = 0.45;
+                        params.intensity = 0.55;
+                        params.size = 0.6;
                         params.xOffset = 0.0;
                     } else {
                         params.speed = 1.0;
