@@ -1045,12 +1045,22 @@
             const gl = canvas.getContext('webgl', { premultipliedAlpha: false });
             if (!gl) return;
 
-            const resizeCanvas = () => {
-                const wrap = document.querySelector('.lightning-wrap');
-                const rect = wrap ? wrap.getBoundingClientRect() : { width: window.innerWidth || 0, height: window.innerHeight || 0 };
-                const isMobile = rect.width < 640;
-                const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
-                const w = rect.width;
+                const params = {
+                  hue: 260,
+                  xOffset: 0.0,
+                  speed: 1.0,
+                  intensity: 1.0,
+                  size: 1.0,
+                  _isMobile: false,
+                  _dpr: 1
+                };
+
+                const resizeCanvas = () => {
+                    const wrap = document.querySelector('.lightning-wrap');
+                    const rect = wrap ? wrap.getBoundingClientRect() : { width: window.innerWidth || 0, height: window.innerHeight || 0 };
+                    const isMobile = rect.width < 640;
+                    const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+                    const w = rect.width;
                 const h = rect.height;
                 canvas.style.width = '100vw';
                 canvas.style.height = '100vh';
@@ -1190,25 +1200,15 @@
             const iTimeLocation = gl.getUniformLocation(program, 'iTime');
             const uHueLocation = gl.getUniformLocation(program, 'uHue');
             const uXOffsetLocation = gl.getUniformLocation(program, 'uXOffset');
-            const uSpeedLocation = gl.getUniformLocation(program, 'uSpeed');
-            const uIntensityLocation = gl.getUniformLocation(program, 'uIntensity');
-            const uSizeLocation = gl.getUniformLocation(program, 'uSize');
+                const uSpeedLocation = gl.getUniformLocation(program, 'uSpeed');
+                const uIntensityLocation = gl.getUniformLocation(program, 'uIntensity');
+                const uSizeLocation = gl.getUniformLocation(program, 'uSize');
 
-            const params = {
-              hue: 260,
-              xOffset: 0.0,
-              speed: 1.0,
-              intensity: 1.0,
-              size: 1.0,
-              _isMobile: false,
-              _dpr: 1
-            };
-
-            const tuneForViewport = () => {
-              if (params._isMobile) {
-                params.speed = 0.7;
-                params.intensity = 0.7;
-                params.size = 0.7;
+                const tuneForViewport = () => {
+                  if (params._isMobile) {
+                    params.speed = 0.7;
+                    params.intensity = 0.7;
+                    params.size = 0.7;
                 params.xOffset = 0.0;
               } else {
                 params.speed = 1.0;
