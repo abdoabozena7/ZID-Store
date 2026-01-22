@@ -1056,22 +1056,39 @@
                     _dpr: 1
                 };
 
+                const getViewportSize = () => {
+                    if (window.visualViewport) {
+                        return {
+                            width: Math.round(window.visualViewport.width),
+                            height: Math.round(window.visualViewport.height)
+                        };
+                    }
+                    return {
+                        width: Math.round(window.innerWidth || 0),
+                        height: Math.round(window.innerHeight || 0)
+                    };
+                };
+
                 const resizeCanvas = () => {
-                    const wrap = document.querySelector('.lightning-wrap');
-                    const rect = wrap ? wrap.getBoundingClientRect() : { width: window.innerWidth || 0, height: window.innerHeight || 0 };
-                    const isMobile = rect.width < 640;
+                    const { width, height } = getViewportSize();
+                    const isMobile = width < 640;
                     const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
-                    const w = rect.width;
-                    const h = rect.height;
-                    canvas.style.width = '100vw';
-                    canvas.style.height = '100vh';
-                    canvas.width = Math.round(w * dpr);
-                    canvas.height = Math.round(h * dpr);
+
+                    canvas.style.width = width + 'px';
+                    canvas.style.height = height + 'px';
+                    canvas.width = Math.round(width * dpr);
+                    canvas.height = Math.round(height * dpr);
                     params._isMobile = isMobile;
                     params._dpr = dpr;
                 };
+
                 resizeCanvas();
                 window.addEventListener('resize', resizeCanvas);
+                window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 150));
+                if (window.visualViewport) {
+                    window.visualViewport.addEventListener('resize', resizeCanvas);
+                    window.visualViewport.addEventListener('scroll', resizeCanvas);
+                }
 
                 const vertexShaderSource = `
                   attribute vec2 aPosition;
@@ -1221,7 +1238,6 @@
 
                 const startTime = performance.now();
                 const render = () => {
-                    resizeCanvas();
                     if (params._isMobile) {
                         canvas.style.display = 'none';
                         return;
