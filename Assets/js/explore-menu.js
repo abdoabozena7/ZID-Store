@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'https://esm.sh/react@18.2.0';
+﻿import React, { useEffect, useRef, useState } from 'https://esm.sh/react@18.2.0';
 import { createRoot } from 'https://esm.sh/react-dom@18.2.0/client';
 import { mat4, quat, vec2, vec3 } from 'https://esm.sh/gl-matrix@3.4.3';
 
@@ -922,8 +922,8 @@ const productItems = Array.from({ length: 20 }, (_, i) => {
   return {
     image: `Assets/images/${id}.png`,
     link: 'https://www.instagram.com/zid.store1',
-    title: `المنتج ${id}`,
-    description: 'اكتشف مظهر المنتج بتجربة ثلاثية الأبعاد.'
+    title: `╪د┘┘à┘╪ز╪ش ${id}`,
+    description: '╪د┘â╪ز╪┤┘ ┘à╪╕┘ç╪▒ ╪د┘┘à┘╪ز╪ش ╪ذ╪ز╪ش╪▒╪ذ╪ر ╪س┘╪د╪س┘è╪ر ╪د┘╪ث╪ذ╪╣╪د╪».'
   };
 });
 
@@ -931,6 +931,8 @@ function InfiniteMenu({ items = [], scale = 1.0 }) {
   const canvasRef = useRef(null);
   const [activeItem, setActiveItem] = useState(null);
   const [isMoving, setIsMoving] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+  const hintTimer = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -973,19 +975,51 @@ function InfiniteMenu({ items = [], scale = 1.0 }) {
     };
   }, [items, scale]);
 
+  useEffect(
+    () => () => {
+      if (hintTimer.current) {
+        clearTimeout(hintTimer.current);
+      }
+    },
+    []
+  );
+
   const handleButtonClick = () => {
-    if (!activeItem?.link) return;
-    if (activeItem.link.startsWith('http')) {
-      window.open(activeItem.link, '_blank');
-    } else {
-      console.log('Internal route:', activeItem.link);
+    if (hintTimer.current) {
+      clearTimeout(hintTimer.current);
     }
+    setShowHint(true);
+    hintTimer.current = setTimeout(() => setShowHint(false), 2500);
   };
 
   return React.createElement(
     'div',
     { className: 'infinite-menu', style: { position: 'relative', width: '100%', height: '100%' } },
     React.createElement('canvas', { id: 'infinite-grid-menu-canvas', ref: canvasRef }),
+    showHint
+      ? React.createElement(
+          'div',
+          {
+            style: {
+              position: 'absolute',
+              bottom: '200px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              padding: '12px 18px',
+              background: 'rgba(0, 0, 0, 0.7)',
+              color: '#fff',
+              borderRadius: '14px',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              fontSize: '14px',
+              lineHeight: 1.4,
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              zIndex: 5
+            }
+          },
+          'اسحب بأي اتجاه علشان تشوف باقي المنتجات'
+        )
+      : null,
     activeItem
       ? React.createElement(
           React.Fragment,
@@ -1003,7 +1037,7 @@ function InfiniteMenu({ items = [], scale = 1.0 }) {
           React.createElement(
             'div',
             { onClick: handleButtonClick, className: `action-button ${isMoving ? 'inactive' : 'active'}` },
-            React.createElement('p', { className: 'action-button-icon' }, '↗')
+            React.createElement('p', { className: 'action-button-icon' }, '\u2197')
           )
         )
       : null
@@ -1015,3 +1049,4 @@ if (exploreRoot) {
   const root = createRoot(exploreRoot);
   root.render(React.createElement(InfiniteMenu, { items: productItems, scale: 1.0 }));
 }
+
