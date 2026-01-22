@@ -1080,14 +1080,20 @@
                     canvas.height = Math.round(height * dpr);
                     params._isMobile = isMobile;
                     params._dpr = dpr;
+                    gl.viewport(0, 0, canvas.width, canvas.height);
+                };
+
+                let resizeRaf = 0;
+                const scheduleResize = () => {
+                    cancelAnimationFrame(resizeRaf);
+                    resizeRaf = requestAnimationFrame(() => resizeCanvas());
                 };
 
                 resizeCanvas();
-                window.addEventListener('resize', resizeCanvas);
-                window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 150));
+                window.addEventListener('resize', scheduleResize);
+                window.addEventListener('orientationchange', () => setTimeout(scheduleResize, 150));
                 if (window.visualViewport) {
-                    window.visualViewport.addEventListener('resize', resizeCanvas);
-                    window.visualViewport.addEventListener('scroll', resizeCanvas);
+                    window.visualViewport.addEventListener('resize', scheduleResize);
                 }
 
                 const vertexShaderSource = `
