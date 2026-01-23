@@ -597,11 +597,12 @@ class InfiniteGridMenu {
   scaleFactor = 1.0;
   movementActive = false;
 
-  constructor(canvas, items, onActiveItemChange, onMovementChange, onInit = null, scale = 1.0) {
+  constructor(canvas, items, onActiveItemChange, onMovementChange, onInit = null, scale = 1.0, onImagesLoaded = null) {
     this.canvas = canvas;
     this.items = items || [];
     this.onActiveItemChange = onActiveItemChange || (() => {});
     this.onMovementChange = onMovementChange || (() => {});
+    this.onImagesLoaded = onImagesLoaded || null;
     this.scaleFactor = scale;
     this.camera.position[2] = 3 * scale;
     this.#init(onInit);
@@ -732,6 +733,10 @@ class InfiniteGridMenu {
       gl.bindTexture(gl.TEXTURE_2D, this.tex);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
       gl.generateMipmap(gl.TEXTURE_2D);
+    }).finally(() => {
+      if (this.onImagesLoaded) {
+        this.onImagesLoaded();
+      }
     });
   }
 
@@ -932,7 +937,9 @@ function InfiniteMenu({ items = [], scale = 1.0 }) {
   const [activeItem, setActiveItem] = useState(null);
   const [isMoving, setIsMoving] = useState(false);
   const [showHint, setShowHint] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const hintTimer = useRef(null);
+  const loaderStyleInjected = useRef(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -944,13 +951,15 @@ function InfiniteMenu({ items = [], scale = 1.0 }) {
     };
 
     if (canvas) {
+      setIsLoading(true);
       sketch = new InfiniteGridMenu(
         canvas,
         items.length ? items : defaultItems,
         handleActiveItem,
         setIsMoving,
         sk => sk.run(),
-        scale
+        scale,
+        () => setIsLoading(false)
       );
       window.__zidExploreResize = () => sketch && sketch.resize();
     }
@@ -992,17 +1001,270 @@ function InfiniteMenu({ items = [], scale = 1.0 }) {
     hintTimer.current = setTimeout(() => setShowHint(false), 2500);
   };
 
+  useEffect(() => {
+    if (loaderStyleInjected.current) return;
+    const style = document.createElement('style');
+    style.textContent = `
+      .products-loading {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        background: rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        z-index: 6;
+      }
+      .products-loading .loader {
+        width: 6em;
+        height: 6em;
+      }
+      .products-loading .loader-ring {
+        animation: ringA 2s linear infinite;
+      }
+      .products-loading .loader-ring-a {
+        stroke: #9708F4;
+      }
+      .products-loading .loader-ring-b {
+        animation-name: ringB;
+        stroke: #5E14E4;
+      }
+      .products-loading .loader-ring-c {
+        animation-name: ringC;
+        stroke: #9708F4;
+      }
+      .products-loading .loader-ring-d {
+        animation-name: ringD;
+        stroke: #5E14E4;
+      }
+      .products-loading .loader-text {
+        color: #fff;
+        font-weight: 700;
+        font-size: 15px;
+        letter-spacing: 0.2px;
+        text-align: center;
+      }
+      @keyframes ringA {
+        from, 4% {
+          stroke-dasharray: 0 660;
+          stroke-width: 20;
+          stroke-dashoffset: -330;
+        }
+        12% {
+          stroke-dasharray: 60 600;
+          stroke-width: 30;
+          stroke-dashoffset: -335;
+        }
+        32% {
+          stroke-dasharray: 60 600;
+          stroke-width: 30;
+          stroke-dashoffset: -595;
+        }
+        40%, 54% {
+          stroke-dasharray: 0 660;
+          stroke-width: 20;
+          stroke-dashoffset: -660;
+        }
+        62% {
+          stroke-dasharray: 60 600;
+          stroke-width: 30;
+          stroke-dashoffset: -665;
+        }
+        82% {
+          stroke-dasharray: 60 600;
+          stroke-width: 30;
+          stroke-dashoffset: -925;
+        }
+        90%, to {
+          stroke-dasharray: 0 660;
+          stroke-width: 20;
+          stroke-dashoffset: -990;
+        }
+      }
+      @keyframes ringB {
+        from, 12% {
+          stroke-dasharray: 0 220;
+          stroke-width: 20;
+          stroke-dashoffset: -110;
+        }
+        20% {
+          stroke-dasharray: 20 200;
+          stroke-width: 30;
+          stroke-dashoffset: -115;
+        }
+        40% {
+          stroke-dasharray: 20 200;
+          stroke-width: 30;
+          stroke-dashoffset: -195;
+        }
+        48%, 62% {
+          stroke-dasharray: 0 220;
+          stroke-width: 20;
+          stroke-dashoffset: -220;
+        }
+        70% {
+          stroke-dasharray: 20 200;
+          stroke-width: 30;
+          stroke-dashoffset: -225;
+        }
+        90% {
+          stroke-dasharray: 20 200;
+          stroke-width: 30;
+          stroke-dashoffset: -305;
+        }
+        98%, to {
+          stroke-dasharray: 0 220;
+          stroke-width: 20;
+          stroke-dashoffset: -330;
+        }
+      }
+      @keyframes ringC {
+        from {
+          stroke-dasharray: 0 440;
+          stroke-width: 20;
+          stroke-dashoffset: 0;
+        }
+        8% {
+          stroke-dasharray: 40 400;
+          stroke-width: 30;
+          stroke-dashoffset: -5;
+        }
+        28% {
+          stroke-dasharray: 40 400;
+          stroke-width: 30;
+          stroke-dashoffset: -175;
+        }
+        36%, 58% {
+          stroke-dasharray: 0 440;
+          stroke-width: 20;
+          stroke-dashoffset: -220;
+        }
+        66% {
+          stroke-dasharray: 40 400;
+          stroke-width: 30;
+          stroke-dashoffset: -225;
+        }
+        86% {
+          stroke-dasharray: 40 400;
+          stroke-width: 30;
+          stroke-dashoffset: -395;
+        }
+        94%, to {
+          stroke-dasharray: 0 440;
+          stroke-width: 20;
+          stroke-dashoffset: -440;
+        }
+      }
+      @keyframes ringD {
+        from, 8% {
+          stroke-dasharray: 0 440;
+          stroke-width: 20;
+          stroke-dashoffset: 0;
+        }
+        16% {
+          stroke-dasharray: 40 400;
+          stroke-width: 30;
+          stroke-dashoffset: -5;
+        }
+        36% {
+          stroke-dasharray: 40 400;
+          stroke-width: 30;
+          stroke-dashoffset: -175;
+        }
+        44%, 50% {
+          stroke-dasharray: 0 440;
+          stroke-width: 20;
+          stroke-dashoffset: -220;
+        }
+        58% {
+          stroke-dasharray: 40 400;
+          stroke-width: 30;
+          stroke-dashoffset: -225;
+        }
+        78% {
+          stroke-dasharray: 40 400;
+          stroke-width: 30;
+          stroke-dashoffset: -395;
+        }
+        86%, to {
+          stroke-dasharray: 0 440;
+          stroke-width: 20;
+          stroke-dashoffset: -440;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    loaderStyleInjected.current = true;
+  }, []);
+
+  const loadingText = '\u0627\u0633\u062a\u0646\u0649 \u0634\u0648\u064a\u0629 \u0648\u0627\u062d\u0646\u0627 \u0628\u0646\u062c\u064a\u0628 \u0627\u0644\u0645\u0646\u062a\u062c\u0627\u062a';
+
   return React.createElement(
     'div',
     { className: 'infinite-menu', style: { position: 'relative', width: '100%', height: '100%' } },
     React.createElement('canvas', { id: 'infinite-grid-menu-canvas', ref: canvasRef }),
+    isLoading
+      ? React.createElement(
+          'div',
+          { className: 'products-loading' },
+          React.createElement(
+            'svg',
+            {
+              className: 'loader',
+              viewBox: '0 0 240 240',
+              role: 'img',
+              'aria-label': 'Loading'
+            },
+            React.createElement('circle', {
+              className: 'loader-ring loader-ring-a',
+              cx: '120',
+              cy: '120',
+              r: '105',
+              fill: 'none',
+              strokeWidth: '20',
+              strokeLinecap: 'round'
+            }),
+            React.createElement('circle', {
+              className: 'loader-ring loader-ring-b',
+              cx: '120',
+              cy: '120',
+              r: '35',
+              fill: 'none',
+              strokeWidth: '20',
+              strokeLinecap: 'round'
+            }),
+            React.createElement('circle', {
+              className: 'loader-ring loader-ring-c',
+              cx: '120',
+              cy: '120',
+              r: '70',
+              fill: 'none',
+              strokeWidth: '20',
+              strokeLinecap: 'round'
+            }),
+            React.createElement('circle', {
+              className: 'loader-ring loader-ring-d',
+              cx: '120',
+              cy: '120',
+              r: '92',
+              fill: 'none',
+              strokeWidth: '20',
+              strokeLinecap: 'round'
+            })
+          ),
+          React.createElement('div', { className: 'loader-text' }, loadingText)
+        )
+      : null,
     showHint
       ? React.createElement(
           'div',
           {
             style: {
               position: 'absolute',
-              bottom: '550px',
+              bottom: '500px',
               left: '50%',
               transform: 'translateX(-50%)',
               padding: '12px 18px',
