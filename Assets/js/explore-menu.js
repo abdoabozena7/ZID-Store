@@ -1014,11 +1014,14 @@ function InfiniteMenu({ items = [], scale = 1.0 }) {
         justify-content: center;
         gap: 16px;
         background: #000;
+        text-align: center;
         z-index: 6;
       }
       .products-loading .loader {
         width: 6em;
         height: 6em;
+        display: block;
+        margin: 0 auto;
       }
       .products-loading .loader-ring {
         animation: ringA 2s linear infinite;
