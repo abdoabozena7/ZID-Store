@@ -1013,9 +1013,7 @@ function InfiniteMenu({ items = [], scale = 1.0 }) {
         align-items: center;
         justify-content: center;
         gap: 16px;
-        background: rgba(0, 0, 0, 0.35);
-        backdrop-filter: blur(6px);
-        -webkit-backdrop-filter: blur(6px);
+        background: #000;
         z-index: 6;
       }
       .products-loading .loader {
