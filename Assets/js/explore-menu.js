@@ -1018,28 +1018,22 @@ function InfiniteMenu({ items = [], scale = 1.0 }) {
         z-index: 6;
       }
       .products-loading .products-loader {
-        width: 6em;
-        height: 6em;
-        display: block;
-        margin: 0 auto;
+        position: relative;
+        width: 108px;
+        display: flex;
+        justify-content: space-between;
       }
-      .products-loading .loader-ring {
-        animation: ringA 2s linear infinite;
-      }
-      .products-loading .loader-ring-a {
-        stroke: #9708F4;
-      }
-      .products-loading .loader-ring-b {
-        animation-name: ringB;
-        stroke: #5E14E4;
-      }
-      .products-loading .loader-ring-c {
-        animation-name: ringC;
-        stroke: #9708F4;
-      }
-      .products-loading .loader-ring-d {
-        animation-name: ringD;
-        stroke: #5E14E4;
+      .products-loading .products-loader::after,
+      .products-loading .products-loader::before {
+        content: "";
+        display: inline-block;
+        width: 48px;
+        height: 48px;
+        background-color: #fff;
+        background-image: radial-gradient(circle 14px, #0d161b 100%, transparent 0);
+        background-repeat: no-repeat;
+        border-radius: 50%;
+        animation: eyeMove 10s infinite, blink 10s infinite;
       }
       .products-loading .loader-text {
         color: #fff;
@@ -1048,152 +1042,29 @@ function InfiniteMenu({ items = [], scale = 1.0 }) {
         letter-spacing: 0.2px;
         text-align: center;
       }
-      @keyframes ringA {
-        from, 4% {
-          stroke-dasharray: 0 660;
-          stroke-width: 20;
-          stroke-dashoffset: -330;
+      @keyframes eyeMove {
+        0%, 10% {
+          background-position: 0px 0px;
         }
-        12% {
-          stroke-dasharray: 60 600;
-          stroke-width: 30;
-          stroke-dashoffset: -335;
+        13%, 40% {
+          background-position: -15px 0px;
         }
-        32% {
-          stroke-dasharray: 60 600;
-          stroke-width: 30;
-          stroke-dashoffset: -595;
+        43%, 70% {
+          background-position: 15px 0px;
         }
-        40%, 54% {
-          stroke-dasharray: 0 660;
-          stroke-width: 20;
-          stroke-dashoffset: -660;
+        73%, 90% {
+          background-position: 0px 15px;
         }
-        62% {
-          stroke-dasharray: 60 600;
-          stroke-width: 30;
-          stroke-dashoffset: -665;
-        }
-        82% {
-          stroke-dasharray: 60 600;
-          stroke-width: 30;
-          stroke-dashoffset: -925;
-        }
-        90%, to {
-          stroke-dasharray: 0 660;
-          stroke-width: 20;
-          stroke-dashoffset: -990;
+        93%, 100% {
+          background-position: 0px 0px;
         }
       }
-      @keyframes ringB {
-        from, 12% {
-          stroke-dasharray: 0 220;
-          stroke-width: 20;
-          stroke-dashoffset: -110;
+      @keyframes blink {
+        0%, 10%, 12%, 20%, 22%, 40%, 42%, 60%, 62%, 70%, 72%, 90%, 92%, 98%, 100% {
+          height: 48px;
         }
-        20% {
-          stroke-dasharray: 20 200;
-          stroke-width: 30;
-          stroke-dashoffset: -115;
-        }
-        40% {
-          stroke-dasharray: 20 200;
-          stroke-width: 30;
-          stroke-dashoffset: -195;
-        }
-        48%, 62% {
-          stroke-dasharray: 0 220;
-          stroke-width: 20;
-          stroke-dashoffset: -220;
-        }
-        70% {
-          stroke-dasharray: 20 200;
-          stroke-width: 30;
-          stroke-dashoffset: -225;
-        }
-        90% {
-          stroke-dasharray: 20 200;
-          stroke-width: 30;
-          stroke-dashoffset: -305;
-        }
-        98%, to {
-          stroke-dasharray: 0 220;
-          stroke-width: 20;
-          stroke-dashoffset: -330;
-        }
-      }
-      @keyframes ringC {
-        from {
-          stroke-dasharray: 0 440;
-          stroke-width: 20;
-          stroke-dashoffset: 0;
-        }
-        8% {
-          stroke-dasharray: 40 400;
-          stroke-width: 30;
-          stroke-dashoffset: -5;
-        }
-        28% {
-          stroke-dasharray: 40 400;
-          stroke-width: 30;
-          stroke-dashoffset: -175;
-        }
-        36%, 58% {
-          stroke-dasharray: 0 440;
-          stroke-width: 20;
-          stroke-dashoffset: -220;
-        }
-        66% {
-          stroke-dasharray: 40 400;
-          stroke-width: 30;
-          stroke-dashoffset: -225;
-        }
-        86% {
-          stroke-dasharray: 40 400;
-          stroke-width: 30;
-          stroke-dashoffset: -395;
-        }
-        94%, to {
-          stroke-dasharray: 0 440;
-          stroke-width: 20;
-          stroke-dashoffset: -440;
-        }
-      }
-      @keyframes ringD {
-        from, 8% {
-          stroke-dasharray: 0 440;
-          stroke-width: 20;
-          stroke-dashoffset: 0;
-        }
-        16% {
-          stroke-dasharray: 40 400;
-          stroke-width: 30;
-          stroke-dashoffset: -5;
-        }
-        36% {
-          stroke-dasharray: 40 400;
-          stroke-width: 30;
-          stroke-dashoffset: -175;
-        }
-        44%, 50% {
-          stroke-dasharray: 0 440;
-          stroke-width: 20;
-          stroke-dashoffset: -220;
-        }
-        58% {
-          stroke-dasharray: 40 400;
-          stroke-width: 30;
-          stroke-dashoffset: -225;
-        }
-        78% {
-          stroke-dasharray: 40 400;
-          stroke-width: 30;
-          stroke-dashoffset: -395;
-        }
-        86%, to {
-          stroke-dasharray: 0 440;
-          stroke-width: 20;
-          stroke-dashoffset: -440;
+        11%, 21%, 41%, 61%, 71%, 91%, 99% {
+          height: 18px;
         }
       }
     `;
@@ -1211,51 +1082,7 @@ function InfiniteMenu({ items = [], scale = 1.0 }) {
       ? React.createElement(
           'div',
           { className: 'products-loading' },
-          React.createElement(
-            'svg',
-            {
-              className: 'products-loader',
-              viewBox: '0 0 240 240',
-              role: 'img',
-              'aria-label': 'Loading'
-            },
-            React.createElement('circle', {
-              className: 'loader-ring loader-ring-a',
-              cx: '120',
-              cy: '120',
-              r: '105',
-              fill: 'none',
-              strokeWidth: '20',
-              strokeLinecap: 'round'
-            }),
-            React.createElement('circle', {
-              className: 'loader-ring loader-ring-b',
-              cx: '120',
-              cy: '120',
-              r: '35',
-              fill: 'none',
-              strokeWidth: '20',
-              strokeLinecap: 'round'
-            }),
-            React.createElement('circle', {
-              className: 'loader-ring loader-ring-c',
-              cx: '120',
-              cy: '120',
-              r: '70',
-              fill: 'none',
-              strokeWidth: '20',
-              strokeLinecap: 'round'
-            }),
-            React.createElement('circle', {
-              className: 'loader-ring loader-ring-d',
-              cx: '120',
-              cy: '120',
-              r: '92',
-              fill: 'none',
-              strokeWidth: '20',
-              strokeLinecap: 'round'
-            })
-          ),
+          React.createElement('div', { className: 'products-loader', role: 'img', 'aria-label': 'Loading' }),
           React.createElement('div', { className: 'loader-text' }, loadingText)
         )
       : null,
