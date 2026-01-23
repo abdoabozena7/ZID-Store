@@ -1017,7 +1017,7 @@ function InfiniteMenu({ items = [], scale = 1.0 }) {
         text-align: center;
         z-index: 6;
       }
-      .products-loading .loader {
+      .products-loading .products-loader {
         width: 6em;
         height: 6em;
         display: block;
@@ -1214,7 +1214,7 @@ function InfiniteMenu({ items = [], scale = 1.0 }) {
           React.createElement(
             'svg',
             {
-              className: 'loader',
+              className: 'products-loader',
               viewBox: '0 0 240 240',
               role: 'img',
               'aria-label': 'Loading'
